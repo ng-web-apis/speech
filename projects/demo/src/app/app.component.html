@@ -1,0 +1,27 @@
+<p>
+    <label>
+        Voice:
+        <select [(ngModel)]="voice">
+            <option
+                *ngFor="let item of voices$ | async; trackBy: voiceByName"
+                [ngValue]="item"
+            >
+                {{ item.name }}
+            </option>
+        </select>
+    </label>
+</p>
+<p>
+    <label>
+        Text:
+        <textarea
+            [formControl]="control"
+            [waTextToSpeech]="text$ | async | waUtterance: options"
+            [waTextToSpeechPaused]="paused"
+            (waTextToSpeechEnd)="onEnd()"
+        ></textarea>
+    </label>
+</p>
+<p>
+    <button type="button" (click)="onClick()">{{ paused ? 'Play' : 'Pause' }}</button>
+</p>

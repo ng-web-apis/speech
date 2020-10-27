@@ -5,8 +5,9 @@ import {
     PathLocationStrategy,
 } from '@angular/common';
 import {NgModule} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
+import {SpeechSynthesisModule} from '@ng-web-apis/speech';
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app.routes';
 
@@ -15,6 +16,8 @@ import {AppRoutingModule} from './app.routes';
     imports: [
         CommonModule,
         FormsModule,
+        ReactiveFormsModule,
+        SpeechSynthesisModule,
         BrowserModule.withServerTransition({appId: 'demo'}),
         AppRoutingModule,
     ],

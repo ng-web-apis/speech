@@ -17,6 +17,7 @@
         "@angular/router": "8.2.0",
         "@ng-web-apis/speech": "latest",
         "@ng-web-apis/common": "latest",
+        "@taiga-ui/cdk": "latest",
         "core-js": "2.6.9",
         "rxjs": "6.5.2",
         "zone.js": "0.9.1"
