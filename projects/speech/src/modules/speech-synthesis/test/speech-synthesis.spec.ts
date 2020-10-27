@@ -22,7 +22,7 @@ describe('SpeechSynthesis', () => {
     })
     class TestComponent {
         text = 'Test 1';
-        options: SpeechSynthesisUtteranceOptions = {};
+        options?: SpeechSynthesisUtteranceOptions;
         paused = true;
         readonly utterance = new SpeechSynthesisUtterance('Test 2');
         readonly onError = jasmine.createSpy('onError');
@@ -49,6 +49,10 @@ describe('SpeechSynthesis', () => {
 
     it('Throws error when not allowed', () => {
         expect(testComponent.onError).toHaveBeenCalledWith('not-allowed');
+
+        // Just to cover both missing and empty argument branches
+        testComponent.options = {};
+        fixture.detectChanges();
     });
 
     it('Accepts options', () => {
