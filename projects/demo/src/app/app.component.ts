@@ -48,12 +48,9 @@ export class AppComponent {
 
     @tuiPure
     get open$(): Observable<boolean> {
-        const open = isSaid('Show sidebar');
-        const close = isSaid('Hide sidebar');
-
         return merge(
-            this.result$.pipe(filter(open), mapTo(true)),
-            this.result$.pipe(filter(close), mapTo(false)),
+            this.result$.pipe(filter(isSaid('Show sidebar')), mapTo(true)),
+            this.result$.pipe(filter(isSaid('Hide sidebar')), mapTo(false)),
         );
     }
 
