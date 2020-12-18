@@ -27,9 +27,19 @@
                                 "input": "projects/demo/src/assets/",
                                 "output": "./assets/"
                             },
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/@taiga-ui/icons/src",
+                                "output": "assets/taiga-ui/icons"
+                            },
                             "projects/demo/src/favicon.ico"
                         ],
-                        "styles": ["projects/demo/src/styles.css"],
+                        "styles": [
+                            "node_modules/@taiga-ui/core/styles/taiga-ui-global.less",
+                            "node_modules/@taiga-ui/core/styles/taiga-ui-local.less",
+                            "node_modules/@taiga-ui/core/styles/taiga-ui-theme.less",
+                            "projects/demo/src/styles.css"
+                        ],
                         "scripts": []
                     },
                     "configurations": {

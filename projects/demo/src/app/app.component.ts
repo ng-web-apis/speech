@@ -1,11 +1,16 @@
 import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
-import {FormControl} from '@angular/forms';
 import {
+    continuous,
+    isSaid,
+    skipUntilSaid,
     SPEECH_SYNTHESIS_VOICES,
+    SpeechRecognitionService,
     SpeechSynthesisUtteranceOptions,
+    takeUntilSaid,
 } from '@ng-web-apis/speech';
-import {tuiPure, tuiReplayedValueChangesFrom} from '@taiga-ui/cdk';
-import {Observable} from 'rxjs';
+import {TuiContextWithImplicit, tuiPure} from '@taiga-ui/cdk';
+import {merge, Observable} from 'rxjs';
+import {filter, mapTo, repeat, retry, share} from 'rxjs/operators';
 
 @Component({
     selector: 'main',
@@ -18,20 +23,47 @@ export class AppComponent {
 
     voice = null;
 
-    readonly control = new FormControl('Hit play/pause to speak this text');
+    text = 'Hit play/pause to speak this text';
+
+    readonly nameExtractor = ({
+        $implicit,
+    }: TuiContextWithImplicit<SpeechSynthesisVoice>) => $implicit.name;
 
     constructor(
         @Inject(SPEECH_SYNTHESIS_VOICES)
         readonly voices$: Observable<ReadonlyArray<SpeechSynthesisVoice>>,
+        @Inject(SpeechRecognitionService)
+        private readonly recognition$: Observable<SpeechRecognitionResult[]>,
     ) {}
 
     @tuiPure
-    get text$(): Observable<string> {
-        return tuiReplayedValueChangesFrom(this.control);
+    get record$(): Observable<SpeechRecognitionResult[]> {
+        return this.result$.pipe(
+            skipUntilSaid('Okay Angular'),
+            takeUntilSaid('Thank you Angular'),
+            repeat(),
+            continuous(),
+        );
+    }
+
+    @tuiPure
+    get open$(): Observable<boolean> {
+        const open = isSaid('Show sidebar');
+        const close = isSaid('Hide sidebar');
+
+        return merge(
+            this.result$.pipe(filter(open), mapTo(true)),
+            this.result$.pipe(filter(close), mapTo(false)),
+        );
     }
 
     get options(): SpeechSynthesisUtteranceOptions {
         return this.getOptions(this.voice);
+    }
+
+    @tuiPure
+    private get result$(): Observable<SpeechRecognitionResult[]> {
+        return this.recognition$.pipe(retry(), repeat(), share());
     }
 
     voiceByName(_: number, {name}: SpeechSynthesisVoice): string {
@@ -40,6 +72,8 @@ export class AppComponent {
 
     onClick() {
         this.paused = !this.paused;
+        // Re-trigger utterance pipe:
+        this.text = this.paused ? this.text + ' ' : this.text;
     }
 
     onEnd() {

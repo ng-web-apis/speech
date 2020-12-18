@@ -6,6 +6,9 @@ import {SPEECH_SYNTHESIS} from '@ng-web-apis/common';
     selector: '[waTextToSpeech]',
 })
 export class TextToSpeechDirective implements OnChanges {
+    @Input('waTextToSpeechPaused')
+    paused = false;
+
     @Input()
     set waTextToSpeech(utterance: SpeechSynthesisUtterance) {
         this.speechSynthesisRef.cancel();
@@ -18,9 +21,6 @@ export class TextToSpeechDirective implements OnChanges {
 
         this.speechSynthesisRef.speak(utterance);
     }
-
-    @Input('waTextToSpeechPaused')
-    paused = false;
 
     @Output('waTextToSpeechError')
     readonly onerror = new EventEmitter<SpeechSynthesisErrorEvent>();
