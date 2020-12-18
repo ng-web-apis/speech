@@ -1,0 +1,142 @@
+<tui-root>
+    <header>
+        <img
+            src="/speech/assets/logo.svg"
+            onerror="this.src='/assets/logo.svg'"
+            class="logo"
+            width="128"
+            height="128"
+            alt="Web Speech API for Angular logo"
+        />
+        <div>
+            <h1>Web Speech API for Angular</h1>
+            Part of
+            <a href="https://ng-web-apis.github.io/">
+                <img
+                    src="/speech/assets/web-api.svg"
+                    onerror="this.src='/assets/web-api.svg'"
+                    width="32"
+                    height="32"
+                    align="center"
+                    alt="Web APIs logo"
+                />
+                Web APIs for Angular
+            </a>
+        </div>
+    </header>
+    <div class="form" [tuiSidebar]="sidebar" [tuiSidebarOpen]="open$ | async">
+        <label tuiLabel class="recognition" [label]="label">
+            <ng-template #label>
+                Speech recognition
+                <tui-tooltip
+                    content="Say «Ok, Angular» to start recording and «Thank you, Angular» to end"
+                ></tui-tooltip>
+            </ng-template>
+            <ng-container *ngIf="record$ | async as result; else placeholder">
+                <span
+                    *ngFor="let result of result"
+                    class="transcript"
+                    [class.transcript_final]="result.isFinal"
+                >
+                    {{ result[0].transcript }}
+                </span>
+                &nbsp;
+            </ng-container>
+            <ng-template #placeholder> Say «Ok, Angular»... </ng-template>
+        </label>
+        <tui-select [valueContent]="nameExtractor" [(ngModel)]="voice">
+            Voice
+            <tui-data-list *tuiDataList>
+                <button
+                    *ngFor="let item of voices$ | async; trackBy: voiceByName"
+                    tuiOption
+                    [value]="item"
+                >
+                    {{ item.name }}
+                </button>
+            </tui-data-list>
+        </tui-select>
+        <tui-text-area
+            class="textarea"
+            [(ngModel)]="text"
+            [waTextToSpeech]="text | waUtterance: options"
+            [waTextToSpeechPaused]="paused"
+            (waTextToSpeechEnd)="onEnd()"
+        >
+            Text
+        </tui-text-area>
+        <div class="buttons">
+            <button tuiButton type="button" (click)="onClick()">
+                {{ paused ? 'Play' : 'Pause' }}
+            </button>
+            Tip: say «Show sidebar»
+        </div>
+    </div>
+    <ng-template #sidebar>
+        <div class="sidebar">
+            <h2>More from @ng-web-apis</h2>
+
+            <a href="https://github.com/ng-web-apis/workers" target="_blank" class="link">
+                <h3>Workers</h3>
+                <img
+                    class="icon"
+                    src="https://ng-web-apis.github.io/dist/assets/images/workers.svg"
+                    width="64"
+                    height="64"
+                    alt="Worker API logo"
+                />
+            </a>
+
+            <a href="https://github.com/ng-web-apis/canvas" target="_blank" class="link">
+                <h3>Canvas</h3>
+                <img
+                    class="icon"
+                    src="https://ng-web-apis.github.io/dist/assets/images/canvas.svg"
+                    width="64"
+                    height="64"
+                    alt="Worker API logo"
+                />
+            </a>
+
+            <a href="https://github.com/ng-web-apis/audio" target="_blank" class="link">
+                <h3>Audio</h3>
+                <img
+                    class="icon"
+                    src="https://ng-web-apis.github.io/dist/assets/images/audio.svg"
+                    width="64"
+                    height="64"
+                    alt="Worker API logo"
+                />
+            </a>
+
+            <a href="https://ng-web-apis.github.io/" target="_blank" class="link">
+                See all
+            </a>
+
+            Tip: say «Hide sidebar» when you're done
+        </div>
+    </ng-template>
+    <footer>
+        Get it here:
+        <a href="https://github.com/ng-web-apis/speech">GitHub</a> |
+        <a href="https://www.npmjs.com/package/@ng-web-apis/speech">NPM</a>. Demo made
+        with
+        <a href="">
+            <svg
+                width="17"
+                height="15"
+                viewBox="0 0 34 30"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M34 29.4667L17 0L0 29.4667H10.3208L14.6218 22.8197H11.4867L17.0002 14.09L22.5137 22.8197H19.3785L23.6795 29.4667H34Z"
+                    fill="#FF7043"
+                />
+            </svg>
+            Taiga UI
+        </a>
+    </footer>
+</tui-root>
