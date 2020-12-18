@@ -17,7 +17,6 @@
         "@angular/platform-browser": "11.0.4",
         "@angular/platform-browser-dynamic": "11.0.4",
         "@angular/router": "11.0.4",
-        "@ng-web-apis/permissions": "latest",
         "@ng-web-apis/speech": "latest",
         "@ng-web-apis/common": "latest",
         "@taiga-ui/cdk": "latest",
